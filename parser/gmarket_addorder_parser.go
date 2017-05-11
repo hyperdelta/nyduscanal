@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"github.com/buger/jsonparser"
@@ -7,7 +7,7 @@ import (
 	"bytes"
 )
 
-func parseData(data []byte) string {
+func GmarketAddOrderParser(data []byte) string {
 	var result bytes.Buffer
 
 	result.WriteString("{")
