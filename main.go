@@ -19,7 +19,7 @@ func main() {
 	defer func() {
 		close(stopChannel)
 	}()
-	out := gateway.BuildNydusCanal(stopChannel)
+	out := gateway.StartGmarketNydusCanal(stopChannel, "localhost:9092")
 
 	count := 0
 	for str := range out {

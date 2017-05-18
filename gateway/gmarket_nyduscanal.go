@@ -6,8 +6,8 @@ import (
 	"github.com/hyperdelta/nyduscanal/parser"
 )
 
-func BuildNydusCanal(stop <-chan bool) <-chan string {
-	consumer, err := sarama.NewConsumer([]string{"localhost:9092"}, nil)
+func StartGmarketNydusCanal(stop <-chan bool, address string) <-chan string {
+	consumer, err := sarama.NewConsumer([]string{address}, nil)
 	if err != nil {
 		panic(err)
 	}
