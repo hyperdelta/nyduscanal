@@ -7,7 +7,7 @@ import (
 	"bytes"
 )
 
-func GmarketAddOrderParser(data []byte) string {
+func GmarketAddOrderParser(data []byte) []byte {
 	var result bytes.Buffer
 
 	result.WriteString("{")
@@ -76,5 +76,5 @@ func GmarketAddOrderParser(data []byte) string {
 		result.Reset()
 	}
 
-	return result.String()
+	return result.Bytes()
 }
