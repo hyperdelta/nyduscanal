@@ -39,7 +39,7 @@ func main() {
 
 	go func() {
 		for jsonBytes := range out {
-			logger.Info(jsonBytes)
+			logger.Info(string(jsonBytes))
 			pipeline.SendDataToAllPipeline(jsonBytes)
 		}
 	}()
