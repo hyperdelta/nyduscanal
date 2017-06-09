@@ -5,10 +5,21 @@ import (
 	"strconv"
 	"strings"
 	"bytes"
+	"github.com/hyperdelta/refinery/log"
+)
+
+var (
+	logger *log.Logger = log.Get()
 )
 
 func GmarketAddOrderParser(data []byte) []byte {
 	var result bytes.Buffer
+
+	method, _ := jsonparser.GetString(data, "method")
+	logger.Info("method: " + method )
+	if(method != "addOrder") {
+		return result.Bytes()
+	}
 
 	result.WriteString("{")
 	// string으로 한번 하면 앞에 " 이걸 떼서 그런지 바로 []byte로 받는 거랑 값이 다름

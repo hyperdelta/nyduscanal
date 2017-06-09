@@ -39,8 +39,10 @@ func main() {
 
 	go func() {
 		for jsonBytes := range out {
-			logger.Info(string(jsonBytes))
-			pipeline.SendDataToAllPipeline(jsonBytes)
+			if(len(jsonBytes) > 5) {
+				logger.Info(string(jsonBytes))
+				pipeline.SendDataToAllPipeline(jsonBytes)
+			}
 		}
 	}()
 
