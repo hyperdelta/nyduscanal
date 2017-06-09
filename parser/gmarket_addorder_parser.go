@@ -20,7 +20,9 @@ func GmarketAddOrderParser(data []byte) []byte {
 	if(method != "addOrder") {
 		return result.Bytes()
 	}
-
+	logger.Info("----------------------")
+	logger.Info(string(data))
+	logger.Info("----------------------")
 	result.WriteString("{")
 	// string으로 한번 하면 앞에 " 이걸 떼서 그런지 바로 []byte로 받는 거랑 값이 다름
 	payload, _ := jsonparser.GetString(data, "payload")
