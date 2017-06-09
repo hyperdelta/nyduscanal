@@ -5,30 +5,20 @@ import (
 	"strconv"
 	"strings"
 	"bytes"
-	"github.com/hyperdelta/refinery/log"
 )
 
-var (
-	logger *log.Logger = log.Get()
-)
 
 func GmarketAddOrderParser(data []byte) []byte {
 	var result bytes.Buffer
 
 	method, _ := jsonparser.GetString(data, "method")
-	logger.Info("method: " + method )
 	if(method != "addOrder") {
 		return result.Bytes()
 	}
-	logger.Info("----------------------")
-	logger.Info(string(data))
-	logger.Info("----------------------")
 	result.WriteString("{")
 	// string으로 한번 하면 앞에 " 이걸 떼서 그런지 바로 []byte로 받는 거랑 값이 다름
-	payload, _ := jsonparser.GetString(data, "payload")
-
-	body, _, _, _ := jsonparser.Get([]byte(payload), "body")
-
+	payload,_,_, _ := jsonparser.Get(data, "payload")
+	body, _, _, _ := jsonparser.Get(payload, "body")
 	// 복수 배송지 걸러내는 로직이 필요함
 	addressCount := 0
 	jsonparser.ArrayEach(body, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
@@ -38,16 +28,21 @@ func GmarketAddOrderParser(data []byte) []byte {
 		addressCount = addressCount + 1 // 복수배송지면 제껴야 함 아에 주지를 않음
 		// 메인 주소 2개 가져오기
 		deliveryAddr1,_ := jsonparser.GetString(value, "DeliveryAddr1")
-		addrs := strings.Split(deliveryAddr1, " ")
-		shippingAddress := addrs[0] + " " + addrs[1]
-		result.WriteString("\"ShippingAddress\" : \"" + shippingAddress + "\",")
+		if len(deliveryAddr1) > 0 {
+			addrs := strings.Split(deliveryAddr1, " ")
+			shippingAddress := addrs[0] + " " + addrs[1]
+			result.WriteString("\"ShippingAddress\" : \"" + shippingAddress + "\",")
+		}
 
 
 		// 우편번호 가져오기
 		//DeliveryZipCode1
 		deliveryZipCode1,_ := jsonparser.GetString(value, "DeliveryZipCode1")
 		deliveryZipCode2,_ := jsonparser.GetString(value, "DeliveryZipCode2")
-		deliveryZipCode := deliveryZipCode1 + "-" + deliveryZipCode2
+		deliveryZipCode := deliveryZipCode1
+		if len(deliveryZipCode2) > 0 {
+			deliveryZipCode = deliveryZipCode + "-" + deliveryZipCode2
+		}
 		result.WriteString("\"DeliveryZipCode\" : \"" + deliveryZipCode + "\",")
 
 
