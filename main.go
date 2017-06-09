@@ -36,11 +36,15 @@ func main() {
 	out := gateway.StartGmarketNydusCanal(stopChannel, "172.30.219.47:9092")
 
 	logger.Info("Init nyduscanal")
-	// 안타깝게도 stop은 아직 쓸 일이 없음.. 혹시나 connection관련하여 나이스하게 종료해야 하면 필요
-	for jsonBytes := range out {
-		logger.Info(jsonBytes)
-		pipeline.SendDataToAllPipeline(jsonBytes)
-	}
+
+	go func() {
+		for jsonBytes := range out {
+			logger.Info(jsonBytes)
+			pipeline.SendDataToAllPipeline(jsonBytes)
+		}
+	}()
+
+
 
 	logger.Info("Listen on " + conf.ListenAddress + strconv.Itoa(conf.ListenPort))
 
