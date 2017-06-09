@@ -29,18 +29,22 @@ func main() {
 	m.Handle("/", defaultRouter)
 	http.DefaultServeMux = m
 
-	logger.Info("Listen on " + conf.ListenAddress + strconv.Itoa(conf.ListenPort))
-
-	http.ListenAndServe(conf.ListenAddress + ":" + strconv.Itoa(conf.ListenPort), nil)
-
 	stopChannel := make(chan bool)
 	defer func() {
 		close(stopChannel)
 	}()
-	out := gateway.StartGmarketNydusCanal(stopChannel, "localhost:9092")
+	out := gateway.StartGmarketNydusCanal(stopChannel, "172.30.219.47:9092")
 
+	logger.Info("Init nyduscanal")
 	// 안타깝게도 stop은 아직 쓸 일이 없음.. 혹시나 connection관련하여 나이스하게 종료해야 하면 필요
 	for jsonBytes := range out {
+		logger.Info(jsonBytes)
 		pipeline.SendDataToAllPipeline(jsonBytes)
 	}
+
+	logger.Info("Listen on " + conf.ListenAddress + strconv.Itoa(conf.ListenPort))
+
+	http.ListenAndServe(conf.ListenAddress + ":" + strconv.Itoa(conf.ListenPort), nil)
+
+
 }
