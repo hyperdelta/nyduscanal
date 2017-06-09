@@ -12,7 +12,7 @@ func StartGmarketNydusCanal(stop <-chan bool, address string) <-chan []byte {
 		panic(err)
 	}
 
-	partitionConsumer, err := consumer.ConsumePartition("test", 0, sarama.OffsetNewest)
+	partitionConsumer, err := consumer.ConsumePartition("al_gmkt_esg.fe_pc", 0, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)
 	}
