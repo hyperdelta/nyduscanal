@@ -29,9 +29,13 @@ func GmarketAddOrderParser(data []byte) []byte {
 		// 메인 주소 2개 가져오기
 		deliveryAddr1,_ := jsonparser.GetString(value, "DeliveryAddr1")
 		if len(deliveryAddr1) > 0 {
+			deliveryAddr1 = strings.Replace(deliveryAddr1, "특별", "", -1)
+			deliveryAddr1 = strings.Replace(deliveryAddr1, "광역", "", -1)
 			addrs := strings.Split(deliveryAddr1, " ")
-			shippingAddress := addrs[0] + " " + addrs[1]
-			result.WriteString("\"ShippingAddress\" : \"" + shippingAddress + "\",")
+			if len(addrs) > 1 {			
+				shippingAddress := addrs[0] + " " + addrs[1]
+				result.WriteString("\"ShippingAddress\" : \"" + shippingAddress + "\",")
+			}
 		}
 
 
